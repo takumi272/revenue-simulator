@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>収益シミュレーション</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, 'Hiragino Sans', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+      padding: 24px 16px 80px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    /* -- カード -- */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    /* -- フォーム -- */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group:last-child { margin-bottom: 0; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 1.1rem;
+      color: #333;
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #4a90d9;
+      background: #fff;
+    }
+
+    .unit {
+      font-size: 0.9rem;
+      color: #888;
+      white-space: nowrap;
+    }
+
+    .ref-text {
+      font-size: 0.8rem;
+      color: #999;
+      margin-top: 8px;
+    }
+
+    /* -- 目標カード（ブルー） -- */
+    .highlight-card {
+      background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+    .highlight-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+    .highlight-value {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .highlight-value .val-unit {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+    .highlight-sub {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-top: 6px;
+    }
+
+    /* -- セクションタイトル -- */
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    /* -- 左ボーダーカード -- */
+    .bordered-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border-left: 4px solid #ccc;
+    }
+    .bordered-card.green { border-left-color: #4caf50; }
+    .bordered-card.orange { border-left-color: #ff9800; }
+    .bordered-card.purple { border-left-color: #9c27b0; }
+
+    .bordered-card .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .bordered-card.green .card-title { color: #4caf50; }
+    .bordered-card.orange .card-title { color: #e67e00; }
+    .bordered-card.purple .card-title { color: #9c27b0; }
+
+    /* -- 結果行 -- */
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+    }
+    .result-row + .result-row {
+      border-top: 1px solid #eee;
+    }
+    .result-label {
+      font-size: 0.88rem;
+      color: #666;
+    }
+    .result-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #333;
+      text-align: right;
+    }
+    .result-value .val-unit {
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: #888;
+      margin-left: 2px;
+    }
+    .result-sub {
+      font-size: 0.75rem;
+      color: #999;
+      text-align: right;
+    }
+
+    /* -- 注記 -- */
+    .note {
+      font-size: 0.75rem;
+      color: #999;
+      text-align: center;
+      margin-top: 24px;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>収益シミュレーション</h1>
+
+    <!-- 入力 -->
+    <form class="card" onsubmit="return false">
+      <div class="form-group">
+        <label for="borrowAmount">借入金額</label>
+        <div class="input-row">
+          <input type="number" id="borrowAmount" value="160" min="0" max="99999" step="1">
+          <span class="unit">万円</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="monthlyPayment">毎月の返済額</label>
+        <div class="input-row">
+          <input type="number" id="monthlyPayment" value="5.7" min="0" max="9999" step="0.1">
+          <span class="unit">万円</span>
+        </div>
+        <div class="ref-text" id="refText">参考：借入金額 160万円</div>
+      </div>
+    </form>
+
+    <!-- 月の目標本数 -->
+    <section class="highlight-card" aria-live="polite">
+      <div class="highlight-label">月の目標本数</div>
+      <div class="highlight-value"><span id="monthlyTargetVal">28.5</span><span class="val-unit">本/月</span></div>
+      <div class="highlight-sub" id="targetFormula">毎月の返済額 5.7万円 ÷ 利益2,000円/本</div>
+    </section>
+
+    <!-- 自作シミュレーション -->
+    <section>
+      <h2 class="section-title">自作シミュレーション</h2>
+
+      <!-- 1本30分 -->
+      <div class="bordered-card green">
+        <div class="card-title">1本30分で自作する場合</div>
+        <div class="result-row">
+          <span class="result-label">1日あたりの制作本数</span>
+          <span class="result-value"><span id="self30dailyVal">0.95</span><span class="val-unit">本</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">1日あたりの制作時間</span>
+          <span class="result-value"><span id="self30timeVal">29</span><span class="val-unit">分</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">月の目標本数</span>
+          <span class="result-value"><span id="self30monthlyVal">28.5</span><span class="val-unit">本</span></span>
+        </div>
+      </div>
+
+      <!-- 1本60分 -->
+      <div class="bordered-card orange">
+        <div class="card-title">1本60分で自作する場合</div>
+        <div class="result-row">
+          <span class="result-label">1日あたりの制作本数</span>
+          <span class="result-value"><span id="self60dailyVal">0.95</span><span class="val-unit">本</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">1日あたりの制作時間</span>
+          <span class="result-value"><span id="self60timeVal">57</span><span class="val-unit">分</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">月の目標本数</span>
+          <span class="result-value"><span id="self60monthlyVal">28.5</span><span class="val-unit">本</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 外注シミュレーション -->
+    <section>
+      <h2 class="section-title">外注シミュレーション</h2>
+
+      <div class="bordered-card purple">
+        <div class="card-title">外注での固定収入（1本1,000円のピンハネ）</div>
+        <div class="result-row">
+          <span class="result-label">外注時の月必要本数</span>
+          <span class="result-value"><span id="outsourceMonthlyVal">57</span><span class="val-unit">本</span></span>
+        </div>
+        <div class="result-row">
+          <div>
+            <span class="result-label">1日1本作る人が必要な人数</span>
+          </div>
+          <div>
+            <div class="result-value"><span id="outsource1dailyVal">1.9</span><span class="val-unit">人</span></div>
+            <div class="result-sub" id="outsource1real">（現実的には 2人）</div>
+          </div>
+        </div>
+        <div class="result-row">
+          <div>
+            <span class="result-label">1日2本作る人が必要な人数</span>
+          </div>
+          <div>
+            <div class="result-value"><span id="outsource2dailyVal">0.95</span><span class="val-unit">人</span></div>
+            <div class="result-sub" id="outsource2real">（現実的には 1人）</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p class="note">
+      ※ 本シミュレーションは固定報酬のみで計算しています。<br>
+      成果報酬は含まれていないため、実際の収益はこれを上回ります。<br>
+      1ヶ月 = 30日で計算。
+    </p>
+  </main>
+
+  <script>
+    var SELF_PRICE = 2000;
+    var OUTSOURCE_PRICE = 1000;
+    var DAYS_PER_MONTH = 30;
+    var MAX_BORROW = 99999;
+    var MAX_PAYMENT = 9999;
+
+    var elBorrow = document.getElementById('borrowAmount');
+    var elPayment = document.getElementById('monthlyPayment');
+
+    function readNormalized(el, max) {
+      var raw = parseFloat(el.value);
+      if (Number.isNaN(raw) || raw < 0) return 0;
+      if (!Number.isFinite(raw) || raw > max) return max;
+      return raw;
+    }
+
+    function syncInput(el, max) {
+      var normalized = readNormalized(el, max);
+      el.value = normalized;
+      return normalized;
+    }
+
+    function fmt(n) {
+      if (n % 1 === 0) return String(n);
+      var s = n.toFixed(2);
+      return s.replace(/0+$/, '').replace(/\.$/, '');
+    }
+
+    function calculate() {
+      var borrow = readNormalized(elBorrow, MAX_BORROW);
+      var payment = readNormalized(elPayment, MAX_PAYMENT);
+      var paymentYen = payment * 10000;
+
+      document.getElementById('refText').textContent = '参考：借入金額 ' + borrow + '万円';
+
+      // 月の目標本数（自作: 利益2,000円/本）
+      var monthlyTarget = paymentYen / SELF_PRICE;
+      document.getElementById('monthlyTargetVal').textContent = fmt(monthlyTarget);
+      document.getElementById('targetFormula').textContent =
+        '毎月の返済額 ' + payment + '万円 ÷ 利益2,000円/本';
+
+      var dailyTarget = monthlyTarget / DAYS_PER_MONTH;
+
+      // 自作30分
+      document.getElementById('self30dailyVal').textContent = dailyTarget.toFixed(2);
+      document.getElementById('self30timeVal').textContent = String(Math.round(dailyTarget * 30));
+      document.getElementById('self30monthlyVal').textContent = fmt(monthlyTarget);
+
+      // 自作60分
+      document.getElementById('self60dailyVal').textContent = dailyTarget.toFixed(2);
+      document.getElementById('self60timeVal').textContent = String(Math.round(dailyTarget * 60));
+      document.getElementById('self60monthlyVal').textContent = fmt(monthlyTarget);
+
+      // 外注（1本1,000円のピンハネ）
+      var outsourceMonthly = paymentYen / OUTSOURCE_PRICE;
+      document.getElementById('outsourceMonthlyVal').textContent = fmt(outsourceMonthly);
+
+      var people1 = outsourceMonthly / DAYS_PER_MONTH;
+      document.getElementById('outsource1dailyVal').textContent = people1.toFixed(1);
+      document.getElementById('outsource1real').textContent =
+        '（現実的には ' + Math.ceil(people1) + '人）';
+
+      var people2 = outsourceMonthly / DAYS_PER_MONTH / 2;
+      document.getElementById('outsource2dailyVal').textContent = people2.toFixed(2);
+      document.getElementById('outsource2real').textContent =
+        '（現実的には ' + Math.ceil(people2) + '人）';
+    }
+
+    elBorrow.addEventListener('input', calculate);
+    elPayment.addEventListener('input', calculate);
+    elBorrow.addEventListener('blur', function() { syncInput(elBorrow, MAX_BORROW); });
+    elPayment.addEventListener('blur', function() { syncInput(elPayment, MAX_PAYMENT); });
+
+    calculate();
+  </script>
+</body>
+</html>
