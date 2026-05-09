@@ -80,12 +80,6 @@
       white-space: nowrap;
     }
 
-    .ref-text {
-      font-size: 0.8rem;
-      color: #999;
-      margin-top: 8px;
-    }
-
     /* -- 目標カード（ブルー） -- */
     .highlight-card {
       background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
@@ -194,19 +188,11 @@
     <!-- 入力 -->
     <form class="card" onsubmit="return false">
       <div class="form-group">
-        <label for="borrowAmount">毎月の支出</label>
-        <div class="input-row">
-          <input type="number" id="borrowAmount" value="160" min="0" max="99999" step="1">
-          <span class="unit">万円</span>
-        </div>
-      </div>
-      <div class="form-group">
         <label for="monthlyPayment">毎月の返済額</label>
         <div class="input-row">
           <input type="number" id="monthlyPayment" value="5.7" min="0" max="9999" step="0.1">
           <span class="unit">万円</span>
         </div>
-        <div class="ref-text" id="refText">参考：毎月の支出 160万円</div>
       </div>
     </form>
 
@@ -298,10 +284,8 @@
     var SELF_PRICE = 2000;
     var OUTSOURCE_PRICE = 1000;
     var DAYS_PER_MONTH = 30;
-    var MAX_BORROW = 99999;
     var MAX_PAYMENT = 9999;
 
-    var elBorrow = document.getElementById('borrowAmount');
     var elPayment = document.getElementById('monthlyPayment');
 
     function readNormalized(el, max) {
@@ -324,11 +308,8 @@
     }
 
     function calculate() {
-      var borrow = readNormalized(elBorrow, MAX_BORROW);
       var payment = readNormalized(elPayment, MAX_PAYMENT);
       var paymentYen = payment * 10000;
-
-      document.getElementById('refText').textContent = '参考：毎月の支出 ' + borrow + '万円';
 
       // 月の目標本数（自作: 利益2,000円/本）
       var monthlyTarget = paymentYen / SELF_PRICE;
@@ -363,9 +344,7 @@
         '（現実的には ' + Math.ceil(people2) + '人）';
     }
 
-    elBorrow.addEventListener('input', calculate);
     elPayment.addEventListener('input', calculate);
-    elBorrow.addEventListener('blur', function() { syncInput(elBorrow, MAX_BORROW); });
     elPayment.addEventListener('blur', function() { syncInput(elPayment, MAX_PAYMENT); });
 
     calculate();
