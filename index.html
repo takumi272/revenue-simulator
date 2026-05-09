@@ -190,7 +190,7 @@
       <div class="form-group">
         <label for="monthlyPayment">毎月の返済額</label>
         <div class="input-row">
-          <input type="number" id="monthlyPayment" value="5.7" min="0" max="9999" step="0.1">
+          <input type="number" id="monthlyPayment" value="0" min="0" max="9999" step="0.1">
           <span class="unit">万円</span>
         </div>
       </div>
@@ -199,8 +199,8 @@
     <!-- 月の目標本数 -->
     <section class="highlight-card" aria-live="polite">
       <div class="highlight-label">月の目標本数</div>
-      <div class="highlight-value"><span id="monthlyTargetVal">28.5</span><span class="val-unit">本/月</span></div>
-      <div class="highlight-sub" id="targetFormula">毎月の返済額 5.7万円 ÷ 利益2,000円/本</div>
+      <div class="highlight-value"><span id="monthlyTargetVal">0</span><span class="val-unit">本/月</span></div>
+      <div class="highlight-sub" id="targetFormula">毎月の返済額 0万円 ÷ 利益2,000円/本</div>
     </section>
 
     <!-- 自作シミュレーション -->
@@ -212,15 +212,15 @@
         <div class="card-title">1本30分で自作する場合</div>
         <div class="result-row">
           <span class="result-label">1日あたりの制作本数</span>
-          <span class="result-value"><span id="self30dailyVal">0.95</span><span class="val-unit">本</span></span>
+          <span class="result-value"><span id="self30dailyVal">0.00</span><span class="val-unit">本</span></span>
         </div>
         <div class="result-row">
           <span class="result-label">1日あたりの制作時間</span>
-          <span class="result-value"><span id="self30timeVal">29</span><span class="val-unit">分</span></span>
+          <span class="result-value"><span id="self30timeVal">0</span><span class="val-unit">分</span></span>
         </div>
         <div class="result-row">
           <span class="result-label">月の目標本数</span>
-          <span class="result-value"><span id="self30monthlyVal">28.5</span><span class="val-unit">本</span></span>
+          <span class="result-value"><span id="self30monthlyVal">0</span><span class="val-unit">本</span></span>
         </div>
       </div>
 
@@ -229,15 +229,15 @@
         <div class="card-title">1本60分で自作する場合</div>
         <div class="result-row">
           <span class="result-label">1日あたりの制作本数</span>
-          <span class="result-value"><span id="self60dailyVal">0.95</span><span class="val-unit">本</span></span>
+          <span class="result-value"><span id="self60dailyVal">0.00</span><span class="val-unit">本</span></span>
         </div>
         <div class="result-row">
           <span class="result-label">1日あたりの制作時間</span>
-          <span class="result-value"><span id="self60timeVal">57</span><span class="val-unit">分</span></span>
+          <span class="result-value"><span id="self60timeVal">0</span><span class="val-unit">分</span></span>
         </div>
         <div class="result-row">
           <span class="result-label">月の目標本数</span>
-          <span class="result-value"><span id="self60monthlyVal">28.5</span><span class="val-unit">本</span></span>
+          <span class="result-value"><span id="self60monthlyVal">0</span><span class="val-unit">本</span></span>
         </div>
       </div>
     </section>
@@ -250,15 +250,15 @@
         <div class="card-title">外注での固定収入（1本1,000円のピンハネ）</div>
         <div class="result-row">
           <span class="result-label">外注時の月必要本数</span>
-          <span class="result-value"><span id="outsourceMonthlyVal">57</span><span class="val-unit">本</span></span>
+          <span class="result-value"><span id="outsourceMonthlyVal">0</span><span class="val-unit">本</span></span>
         </div>
         <div class="result-row">
           <div>
             <span class="result-label">1日1本作る人が必要な人数</span>
           </div>
           <div>
-            <div class="result-value"><span id="outsource1dailyVal">1.9</span><span class="val-unit">人</span></div>
-            <div class="result-sub" id="outsource1real">（現実的には 2人）</div>
+            <div class="result-value"><span id="outsource1dailyVal">0.0</span><span class="val-unit">人</span></div>
+            <div class="result-sub" id="outsource1real">（現実的には 0人）</div>
           </div>
         </div>
         <div class="result-row">
@@ -266,8 +266,8 @@
             <span class="result-label">1日2本作る人が必要な人数</span>
           </div>
           <div>
-            <div class="result-value"><span id="outsource2dailyVal">0.95</span><span class="val-unit">人</span></div>
-            <div class="result-sub" id="outsource2real">（現実的には 1人）</div>
+            <div class="result-value"><span id="outsource2dailyVal">0.00</span><span class="val-unit">人</span></div>
+            <div class="result-sub" id="outsource2real">（現実的には 0人）</div>
           </div>
         </div>
       </div>
